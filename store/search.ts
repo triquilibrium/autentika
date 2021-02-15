@@ -1,8 +1,8 @@
-import settings from '../settings'
+import settings from '@/settings'
 
 export const state = () => ({
     githubApi: settings.GITHUB_API_URL,
-    token: settings.GITHUB_TOKEN,
+    token: settings.TOKEN,
     search: {
         results: {},
     },

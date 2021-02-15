@@ -14,15 +14,9 @@ export default Vue.extend({})
 .container {
     margin: 0 auto;
     padding: 30px 15px;
-    min-height: 100vh;
-    max-width: 80%;
     display: flex;
     flex-direction: column;
-    /* justify-content: center;  */
-    /* align-items: center; */
-    /* text-align: center; */
 }
-
 .title {
     font-family: 'Quicksand', Arial, sans-serif;
     display: block;
@@ -31,7 +25,6 @@ export default Vue.extend({})
     color: #35495e;
     letter-spacing: 1px;
 }
-
 .subtitle {
     font-weight: 300;
     font-size: 42px;
@@ -39,8 +32,12 @@ export default Vue.extend({})
     word-spacing: 5px;
     padding-bottom: 15px;
 }
-
 .links {
     padding-top: 15px;
+}
+@media only screen and (min-width: 768px) {
+    .container {
+        max-width: 80%;
+    }
 }
 </style>

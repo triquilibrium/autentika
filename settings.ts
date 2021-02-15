@@ -1,6 +1,6 @@
 export default {
     LANGUAGE: 'en',
-    GITHUB_TOKEN: '19e289f885a8dc54b78cc4bddf25a55141f31a61',
+    TOKEN: '8452d4a87---2cba6f7d588f1f88---883f1d78b00c939',
     GITHUB_API_URL: 'https://api.github.com/graphql',
     GITHUB_SEARCH_QUERY(query: string, after?: string | null, before?: string | null): string {
         return (

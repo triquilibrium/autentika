@@ -5,6 +5,15 @@ export const state = (): Translations => ({
     back: 'back',
     emptyResults: 'no results.',
     author: 'author',
+    at: 'at',
+    lastCommits: 'last commits:',
+    createdBy: 'created by',
+    githubPage: 'see on github',
+    cloneRepository: 'clone repository',
+    commit: 'commit',
+    page: 'page',
+    previous: 'previous',
+    next: 'next',
 })
 
 export const getters = {

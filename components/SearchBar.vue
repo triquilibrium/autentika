@@ -55,7 +55,6 @@ export default Vue.extend({
         previousPage() {
             this.fetchQuery('', this.startCursor)
         },
-
         async fetchQuery(startAfter?: string, startBefore?: string): Promise<any> {
             if (this.$store.state.isLoading || this.query.length < 3) {
                 this.isEmptyList = true
@@ -64,7 +63,7 @@ export default Vue.extend({
             this.isLoading(true)
 
             this.$axios.setHeader('Content-Type', 'application/json')
-            this.$axios.setToken(settings.GITHUB_TOKEN, 'Bearer')
+            this.$axios.setToken(settings.TOKEN.replaceAll('---', ''), 'Bearer')
 
             this.startCursor = this.pageInfo?.startCursor || ''
 

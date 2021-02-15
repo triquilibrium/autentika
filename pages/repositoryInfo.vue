@@ -5,32 +5,34 @@
             <p>{{ translations.author }}: {{ repository.owner.login }}</p>
             <p>
                 <a class="repository-info__link" :href="repository.url" target="_blank">
-                    see on github
+                    {{ translations.githubPage }}
                 </a>
             </p>
         </div>
         <div class="repository-info__columns">
             <div class="repository-info__clone">
-                <h3>clone repository</h3>
+                <h3>{{ translations.cloneRepository }}</h3>
                 <code class="repository-info__clone--link">{{ repository.sshUrl }}</code>
             </div>
-            <div>
-                <h3>last commits:</h3>
-                <ul class="repository-info__commits">
+            <div class="repository-info__commits">
+                <h3>{{ translations.lastCommits }}</h3>
+                <ul class="repository-info__commits-list">
                     <li
                         class="repository-info__commits-item"
                         v-for="(item, index) in repository.defaultBranchRef.target.history.edges"
                         :key="index"
                     >
-                        <p>commit: {{ item.node.abbreviatedOid }}</p>
+                        <p>{{ translations.commit }}: {{ item.node.abbreviatedOid }}</p>
                         <p>
-                            created by:
-                            <strong>{{ item.node.author.name }}</strong> at
+                            {{ translations.createdBy }}
+                            <strong>{{ item.node.author.name }}</strong> {{ translations.at }}
                             {{ formatDate(item.node.committedDate) }}
                         </p>
                     </li>
                 </ul>
-                <div v-if="!repository.defaultBranchRef.target.history.edges">0</div>
+                <div v-if="!repository.defaultBranchRef.target.history.edges">
+                    {{ translations.emptyResults }}
+                </div>
             </div>
         </div>
         <div class="container">
@@ -48,7 +50,7 @@ export default Vue.extend({
     name: 'repository-info',
     data() {
         return {
-            result: parseInt(this.$route.params.index),
+            result: parseInt(this.$route.params.index) || 0,
         }
     },
     computed: {
@@ -107,13 +109,27 @@ export default Vue.extend({
 }
 .repository-info__columns {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
 }
+.repository-info__commits {
+    padding: 20px 0;
+}
+
 .repository-info__commits-item {
     display: block;
     margin: 7px 3px;
     padding: 10px;
     border: 1px dotted #999;
+}
+
+@media only screen and (min-width: 768px) {
+    .repository-info__commits {
+        padding: 0 10px 10px 20px;
+        width: 50%;
+    }
+    .repository-info__columns {
+        flex-direction: row;
+    }
 }
 </style>
