@@ -2,7 +2,8 @@
     "editor.formatOnSave": true,
     "vetur.format.defaultFormatter.html": "prettier",
     "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true
+        "source.fixAll.eslint": true,
+        "source.fixAll.stylelint": true
     },
     "workbench.settings.useSplitJSON": true
 }
