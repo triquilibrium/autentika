@@ -47,7 +47,7 @@ export default {
             routes.push({
                 path: '/data/:name/:index',
                 components: {
-                    default: resolve(__dirname, 'pages/data'), // or routes[index].component
+                    default: resolve(__dirname, 'pages/repositoryInfo'),
                 },
             })
 

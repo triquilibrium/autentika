@@ -22,4 +22,7 @@ export const getters = {
     getResults(state: any) {
         return state.search?.results?.edges
     },
+    getPageInfo(state: any) {
+        return state.search.results.pageInfo
+    },
 }

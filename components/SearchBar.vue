@@ -1,17 +1,17 @@
 <template>
     <div class="search">
         <p class="search__instruction">
-            Search repositories by name, please type at least 3 signs and press enter
+            {{ translations.searchInfo }}
         </p>
         <input
             class="search__query"
             type="text"
             placeholder="search..."
             v-model="query"
-            @keydown.enter="fetchQuery"
+            @keydown.enter="fetchQuery()"
         />
         <ul class="search__list">
-            <div v-if="isEmptyList">no results.</div>
+            <div v-if="isEmptyList">{{ translations.emptyResults }}</div>
             <li class="search__list-item" v-for="(item, index) in items" :key="index">
                 <nuxt-link
                     class="search__list-item--link"
@@ -24,24 +24,39 @@
                 </nuxt-link>
             </li>
         </ul>
+        <Pagination
+            v-if="items && (pageInfo.hasPreviousPage || pageInfo.hasNextPage)"
+            :available-previous="pageInfo.hasPreviousPage"
+            :available-next="pageInfo.hasNextPage"
+            @previous="previousPage"
+            @next="nextPage"
+        />
     </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 
-import settings from './../settings'
+import settings from '@/settings'
 import { mapGetters, mapMutations } from 'vuex'
+import Pagination from './Pagination.vue'
 
 export default Vue.extend({
+    components: { Pagination },
     name: 'SearchBar',
     methods: {
         ...mapMutations({
             results: 'search/setSearchResults',
             isLoading: 'toogleLoading',
         }),
+        nextPage() {
+            this.fetchQuery(this.pageInfo.endCursor)
+        },
+        previousPage() {
+            this.fetchQuery('', this.startCursor)
+        },
 
-        async fetchQuery() {
+        async fetchQuery(startAfter?: string, startBefore?: string): Promise<any> {
             if (this.$store.state.isLoading || this.query.length < 3) {
                 this.isEmptyList = true
                 return
@@ -51,15 +66,24 @@ export default Vue.extend({
             this.$axios.setHeader('Content-Type', 'application/json')
             this.$axios.setToken(settings.GITHUB_TOKEN, 'Bearer')
 
+            this.startCursor = this.pageInfo?.startCursor || ''
+
             return await this.$axios
                 .$post(settings.GITHUB_API_URL, {
-                    query: settings.GITHUB_SEARCH_QUERY(this.query),
+                    query: settings.GITHUB_SEARCH_QUERY(
+                        this.query.toString(),
+                        startAfter,
+                        startBefore
+                    ),
                 })
                 .then(result => {
                     const results = result.data.search
 
                     this.isEmptyList = results.edges.length ? false : true
                     this.results(results)
+                    if (!this.startCursor) {
+                        this.startCursor = this.pageInfo.startCursor
+                    }
                 })
                 .finally(() => this.isLoading(false))
                 .catch(error => console.error(error))
@@ -68,12 +92,15 @@ export default Vue.extend({
     computed: {
         ...mapGetters({
             items: 'search/getResults',
+            pageInfo: 'search/getPageInfo',
+            translations: 'translations/' + settings.LANGUAGE + '/getTranslation',
         }),
     },
     data() {
         return {
             query: '',
             isEmptyList: false,
+            startCursor: '',
         }
     },
 })
