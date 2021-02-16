@@ -63,19 +63,18 @@ export default Vue.extend({
         },
     },
     methods: {
-        formatNumber(value: string) {
-            return value.length === 1 ? '0' + value : value
+        formatNumber(value: number) {
+            return value.toString().length === 1 ? '0' + value : value
         },
         formatDate(date: string) {
             const commitDate = new Date(date)
             return [
-                this.formatNumber(commitDate.getHours().toString()) +
+                this.formatNumber(commitDate.getHours()) +
                     ':' +
-                    this.formatNumber(commitDate.getMinutes().toString()),
-                this.formatNumber(commitDate.getDate().toString()) +
+                    this.formatNumber(commitDate.getMinutes()),
+                this.formatNumber(commitDate.getDate()) +
                     '/' +
-                    commitDate.getMonth() +
-                    1 +
+                    this.formatNumber(commitDate.getMonth() + 1) +
                     '/' +
                     commitDate.getFullYear(),
             ].join(' ')

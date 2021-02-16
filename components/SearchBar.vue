@@ -45,8 +45,8 @@ import { Data } from '@/interfaces/searchBar'
 import { SearchBar } from '@/enums/searchBar'
 
 export default Vue.extend({
-    components: { Pagination },
     name: 'SearchBar',
+    components: { Pagination },
     methods: {
         ...mapMutations({
             results: 'search/setSearchResults',
