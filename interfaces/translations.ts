@@ -1,6 +1,7 @@
 export interface Translations {
     readonly searchInfo: string
     readonly searchPlaceholder: string
+    readonly searchValidQuery: string
     readonly emptyResults: string
     readonly back: string
     readonly author: string

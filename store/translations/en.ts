@@ -3,6 +3,7 @@ import { Translations } from '@/interfaces/translations'
 export const state = (): Translations => ({
     searchInfo: 'Search repositories by name, please type at least 3 signs and press enter',
     searchPlaceholder: 'type here...',
+    searchValidQuery: 'please type at least 3 signs',
     back: 'back',
     emptyResults: 'no results.',
     author: 'author',

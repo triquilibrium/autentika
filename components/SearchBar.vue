@@ -11,6 +11,7 @@
             @keydown.enter="fetchQuery()"
         />
         <ul class="search__list">
+            <div v-if="!isValidQuery">{{ translations.searchValidQuery }}</div>
             <div v-if="isEmptyList">{{ translations.emptyResults }}</div>
             <li class="search__list-item" v-for="(item, index) in items" :key="index">
                 <nuxt-link
@@ -60,10 +61,12 @@ export default Vue.extend({
             this.pagesHistory.shift()
         },
         async fetchQuery(startAfter?: string, startBefore?: string): Promise<any> {
-            if (this.$store.state.isLoading || this.query.length < 3) {
-                this.isEmptyList = true
+            if (this.query.length < SearchBar.MIN_QUERY_LENGTH) {
+                this.isEmptyList = false
+                this.isValidQuery = false
                 return
             }
+            this.isValidQuery = true
             this.isLoading(true)
 
             this.$axios.setHeader('Content-Type', 'application/json')
@@ -98,6 +101,7 @@ export default Vue.extend({
         return {
             query: '',
             isEmptyList: false,
+            isValidQuery: true,
             pagesHistory: [],
         }
     },
