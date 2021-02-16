@@ -6,7 +6,7 @@
         <input
             class="search__query"
             type="text"
-            placeholder="search..."
+            :placeholder="translations.searchPlaceholder"
             v-model="query"
             @keydown.enter="fetchQuery()"
         />
@@ -40,6 +40,8 @@ import Vue from 'vue'
 import settings from '@/settings'
 import { mapGetters, mapMutations } from 'vuex'
 import Pagination from './Pagination.vue'
+import { Data } from '@/interfaces/searchBar'
+import { SearchBar } from '@/enums/searchBar'
 
 export default Vue.extend({
     components: { Pagination },
@@ -49,11 +51,13 @@ export default Vue.extend({
             results: 'search/setSearchResults',
             isLoading: 'toogleLoading',
         }),
-        nextPage() {
+        nextPage(): void {
+            this.pagesHistory.unshift(this.pageInfo.startCursor)
             this.fetchQuery(this.pageInfo.endCursor)
         },
-        previousPage() {
-            this.fetchQuery('', this.startCursor)
+        previousPage(): void {
+            this.fetchQuery('', this.pagesHistory[SearchBar.PAGE_BACK])
+            this.pagesHistory.shift()
         },
         async fetchQuery(startAfter?: string, startBefore?: string): Promise<any> {
             if (this.$store.state.isLoading || this.query.length < 3) {
@@ -64,8 +68,6 @@ export default Vue.extend({
 
             this.$axios.setHeader('Content-Type', 'application/json')
             this.$axios.setToken(settings.TOKEN.replaceAll('---', ''), 'Bearer')
-
-            this.startCursor = this.pageInfo?.startCursor || ''
 
             return await this.$axios
                 .$post(settings.GITHUB_API_URL, {
@@ -80,9 +82,6 @@ export default Vue.extend({
 
                     this.isEmptyList = results.edges.length ? false : true
                     this.results(results)
-                    if (!this.startCursor) {
-                        this.startCursor = this.pageInfo.startCursor
-                    }
                 })
                 .finally(() => this.isLoading(false))
                 .catch(error => console.error(error))
@@ -95,11 +94,11 @@ export default Vue.extend({
             translations: 'translations/' + settings.LANGUAGE + '/getTranslation',
         }),
     },
-    data() {
+    data(): Data {
         return {
             query: '',
             isEmptyList: false,
-            startCursor: '',
+            pagesHistory: [],
         }
     },
 })
